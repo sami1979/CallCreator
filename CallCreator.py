@@ -122,6 +122,7 @@ class CallStore:
 			u = pickle.Unpickler(f)
 			CaseDescriptionContainer.load(u.load())
 			f.close()
+
 		else:
 			raise IOError("File " + cls.__FileDescriptionContainer + " does not exists")
 
@@ -169,6 +170,7 @@ class CaseDescriptionContainer:
 		random.seed()
 		return cls.__descriptions[random.randrange(0, len(cls.__descriptions))]
 
+
 class CallManager:
 	
 	__session = None
@@ -178,7 +180,6 @@ class CallManager:
 			self.loadCaseDescriptions()
 		except OSError:
 			raise
-		
 	
 	def checkCaseDescriptionContainer(self):
 		if CaseDescriptionContainer.isEmpty():
@@ -247,5 +248,6 @@ if __name__ == "__main__":
 	CallContainer.sortCallQueue()
 	for c in CallContainer.getCallQueue():
 		print(c.getStartTime() + "-" + c.getEndTime() + " " + c.getDescription())
+
 	
 	
