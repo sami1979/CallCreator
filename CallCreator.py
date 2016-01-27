@@ -6,7 +6,7 @@ import pickle
 from os.path import isfile
 from sys import exc_info
 
-class Call:
+class Case:
 	
 	def __init__(self):
 		self.__description = ""
@@ -18,10 +18,10 @@ class Call:
 	
 	
 	def setStartTime(self, stime):
-		self.__start_time = Call.__defineTime(stime)
+		self.__start_time = Case.__defineTime(stime)
 	
 	def setEndTime(self, etime):
-		self.__end_time = Call.__defineTime(etime)
+		self.__end_time = Case.__defineTime(etime)
 		
 	
 	def getDescription(self):
@@ -37,7 +37,7 @@ class Call:
 	def __defineTime(ltime):
 		return time.strptime(ltime, "%H:%M")
 
-class CallWithCaseNumber(Call):
+class CaseWithCaseNumber(Case):
 	
 	def __init__(self):
 		self.__case_number = 0
@@ -53,27 +53,31 @@ class CallWithCaseNumber(Call):
 	def getCaseNumber(self):
 		return self.__case_number
 
-class CallContainer:
+class CaseContainer:
 	
-	__callqueue = []
-	
-	@classmethod
-	def addCall(cls, call):
-		cls.__callqueue.append(call)
+	__casequeue = []
 	
 	@classmethod
-	def removeCall(cls, call):
-		cls.__callqueue.remove(call)
+	def addCase(cls, case):
+		cls.__casequeue.append(case)
 	
 	@classmethod
-	def getCallQueue(cls):
-		return cls.__callqueue
+	def removeCase(cls, case):
+		cls.__casequeue.remove(case)
 	
 	@classmethod
-	def sortCallQueue(cls):
-		cls.__callqueue = sorted(cls.__callqueue, key=lambda call: call.getStartTime())
+	def getCaseQueue(cls):
+		return cls.__casequeue
+	
+	@classmethod
+	def emptyCaseQueue(cls):
+		cls.__casequeue == []
+	
+	@classmethod
+	def sortCaseQueue(cls):
+		cls.__casequeue = sorted(cls.__casequeue, key=lambda case: case.getStartTime())
 
-class CallRandomCreator:
+class CaseRandomCreator:
 	
 	@staticmethod
 	def __createRandomStartTime(start_hour, end_hour):
@@ -95,7 +99,7 @@ class CallRandomCreator:
 		
 	@classmethod
 	def createRandomCase(cls, start_hour, end_hour, max_duration = 15):
-		c = Call()
+		c = Case()
 		c.setDescription(CaseDescriptionContainer.getRandomDescription())
 		shour, smin = cls.__createRandomStartTime(start_hour, end_hour)
 		ehour, emin = cls.__createRandomEndTime(shour, smin, max_duration)
@@ -104,13 +108,13 @@ class CallRandomCreator:
 		return c
 	
 
-class CallStore:
+class CaseStore:
 	
 	__FileDescriptionContainer = "CaseDescriptions.dat"
 	
 	@classmethod
 	def storeDescriptionContainer(cls):
-		f = open(CallStore.__FileDescriptionContainer, "bw")
+		f = open(CaseStore.__FileDescriptionContainer, "bw")
 		p = pickle.Pickler(f, 3)
 		p.dump(CaseDescriptionContainer.getDescriptions())
 		f.close()
@@ -171,7 +175,7 @@ class CaseDescriptionContainer:
 		return cls.__descriptions[random.randrange(0, len(cls.__descriptions))]
 
 
-class CallManager:
+class CaseManager:
 	
 	__session = None
 	
@@ -188,47 +192,59 @@ class CallManager:
 			print("Is not Empty")
 
 	def createCase(self, description, starttime, endtime):
-		c = Call()
+		c = Case()
 		c.setDescription(description)
 		c.setStartTime(starttime)
 		c.setEndTime(endtime)
 		return c
 
-	def createCaseDescription(self):
-		d = input("Bitte Case Beschreibung eingeben: ")
-		CaseDescriptionContainer.addDescription(d)
-
-	def createCaseDescriptionsAndStore(self):
-		checkCaseDescriptionContainer()
-		n = int(input("Wie viele Case Beschreibungen sollen erfasst werden? "))
-		for i in range(0, n):
-			createCaseDescription()
-		checkCaseDescriptionContainer()
-		CallStore.storeDescriptionContainer()
+	def createCaseDescription(self, description):
+		CaseDescriptionContainer.addDescription(description)
+		CaseStore.storeDescriptionContainer()
 
 	def loadCaseDescriptions(self):
 		try:
-			CallStore.loadDescriptionContainer()
+			CaseStore.loadDescriptionContainer()
 		except OSError:
 			raise
 
 
-	def createRandomCase(self, starthour, endhour):
-		random.seed()
-		c = Call.Call()
-		c.setDescription(CaseDescriptionContainer.getRandomDescription())
-		return c
+	def createRandomCase(self, starthour, endhour, intervall):
+		CaseContainer.addCase(CaseRandomCreator.createRandomCase(starthour, endhour, intervall))
 	
 	@classmethod
-	def getCallManagerObject(cls):
+	def getCaseManagerObject(cls):
 		if cls.__session is None:
-			cls.__session = CallManager()
+			cls.__session = CaseManager()
 		return cls.__session
+	
+	def getAllCaseDescriptions(self):
+		CaseStore.loadDescriptionContainer
+		return CaseDescriptionContainer.getDescriptions()
+	
+	def checkIfCaseDescriptionExists(self, case_description):
+		if case_description in CaseDescriptionContainer.getDescriptions():
+			return True
+		else:
+			return False
+	
+	def removeCaseDescription(self, case_description):
+		CaseDescriptionContainer.removeDescription(case_description)
+		CaseStore.storeDescriptionContainer()
+	
+	def getAllCases(self):
+		return CaseContainer.getCaseQueue()
+	
+	def sortAllCases(self):
+		CaseContainer.sortCaseQueue()
+		
+	def deleteCaseQueue(self):
+		CaseContainer.emptyCaseQueue()
 
 
 if __name__ == "__main__":
 	try:
-		cases = CallManager.getCallManagerObject()
+		cases = CaseManager.getCaseManagerObject()
 	except OSError as e:
 		print(e)
 		print("Programmabbruch")
@@ -242,11 +258,11 @@ if __name__ == "__main__":
 		end = 23
 		intervall = 15
 	for i in range(0, 20):
-		c = CallRandomCreator.createRandomCase(begin, end, intervall)
+		c = CaseRandomCreator.createRandomCase(begin, end, intervall)
 		#print(c.getStartTime() + "-" + c.getEndTime() + " " + c.getDescription())
-		CallContainer.addCall(c)
-	CallContainer.sortCallQueue()
-	for c in CallContainer.getCallQueue():
+		CaseContainer.addCase(c)
+	CaseContainer.sortCaseQueue()
+	for c in CaseContainer.getCaseQueue():
 		print(c.getStartTime() + "-" + c.getEndTime() + " " + c.getDescription())
 
 	
