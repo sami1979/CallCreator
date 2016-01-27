@@ -2,7 +2,7 @@
 
 v0.2.1
 
-Eimstellungen können nun gespeichert werden
+Einstellungen können nun gespeichert werden
 
 v0.2
 
