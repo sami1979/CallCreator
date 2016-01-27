@@ -242,7 +242,4 @@ class CMDInputError(Exception):
 if __name__ == "__main__":
 	cmd = cmdInterface()
 	cmd.main()
-	#CMIFStore.init()
-	#CMDIFStore.changeSettings(12, 23, 22, 11)
-	#print(CMDIFStore.getSettings())
 	
