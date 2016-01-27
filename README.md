@@ -1,5 +1,9 @@
 # CallCreator
 
+v0.2.1
+
+Eimstellungen können nun gespeichert werden
+
 v0.2
 
 new Commandline Interface added. Run cmdInterface.py to start tool
