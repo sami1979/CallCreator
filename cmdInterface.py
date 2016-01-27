@@ -2,17 +2,23 @@
 
 import platform
 import os
+import configparser
 from CallCreator import *
 
 class cmdInterface:
 	beginhour = 17
 	endhour = 23
 	intervall = 15 # minutes
-	SELECTIONMENU = (0, 1, 2, 3 ,4 ,5)
+	SELECTIONMENU = (0, 1, 2, 3 ,4 ,5, 6)
 	number_of_cases = 15
 	
 	def __init__(self):
-		pass
+		CMDIFStore.init()
+		settings = CMDIFStore.getSettings()
+		self.beginhour = settings["beginhour"] 
+		self.endhour = settings["endhour"] 
+		self.intervall = settings["intervall"]
+		self.number_of_cases = settings["number_of_cases"]
 	
 	def __getOSType(self):
 		return platform.system()
@@ -51,6 +57,7 @@ class cmdInterface:
 		print("\t3. Ausgabe der Case Beschreibungen")
 		print("\t4. Eingabe einer neuen Case-Beschreibung")
 		print("\t5. Löschen einer vorhandenen Case-Beschreibung")
+		print("\t6. Einstellungen speichern")
 		print("\n\t0. Ende")
 	
 	def prepareCaseCreator(self):
@@ -137,7 +144,13 @@ class cmdInterface:
 			print("Fehler: Eingabe ungültig!")
 			return
 		self.number_of_cases = number_of_cases
-			
+	
+	def storeSettings(self):
+		self.clearScreen()
+		CMDIFStore.changeSettings(self.beginhour, self.endhour, \
+		                        self.intervall, self.number_of_cases)
+		CMDIFStore.saveSettings()
+		print("Einstellungen gespeichert\n")
 			
 					
 	def main(self):
@@ -145,7 +158,8 @@ class cmdInterface:
 		while True:
 			self.printMainMenue()
 			try:
-				result = self.checkKeyKeyboardInput(self.getKeyboardInput("\nAuswahl: "))
+				result = self.checkKeyKeyboardInput(\
+				         self.getKeyboardInput("\nAuswahl: "))
 			except ValueError:
 				print("Falsche Eingabe, keine Zahl")
 				input("Drücke eine Taste um fortzusetzen")
@@ -171,7 +185,52 @@ class cmdInterface:
 			elif result == 5:
 				self.deleteCaseDescription(call_manager_instance)
 				input("\n\nDrücke eine Taste um fortzusetzen")
-			
+			elif result == 6:
+				self.storeSettings()
+				input("\n\nDrücke eine Taste um fortzusetzen")
+
+class CMDIFStore:
+	__settings_file = "cmdIFsettings.ini"
+	__settings = { "beginhour" : 17, \
+	             "endhour" : 23, \
+	             "intervall" : 15, \
+	             "number_of_cases" : 15 }
+	
+	@classmethod
+	def init(cls):
+		cls.config = configparser.ConfigParser()
+		if os.path.isfile(cls.__settings_file):
+			cls.config.read(cls.__settings_file)
+			cls.__settings["beginhour"] = int(cls.config.get("CaseSettings",\
+			                              "beginhour"))
+			cls.__settings["endhour"] = int(cls.config.get("CaseSettings",\
+			                            "endhour"))
+			cls.__settings["intervall"] = int(cls.config.get("CaseSettings",\
+			                              "intervall"))
+			cls.__settings["number_of_cases"] = int(cls.config.get("CaseSettings",\
+			                                    "number_of_cases"))
+		else:
+			cls.config["CaseSettings"] = cls.__settings
+			cls.saveSettings()
+	
+	@classmethod
+	def getSettings(cls):
+		return cls.__settings
+	
+	@classmethod
+	def changeSettings(cls, beginhour, endhour, intervall, 
+	                   number_of_cases):
+		cls.__settings["beginhour"] = beginhour
+		cls.__settings["endhour"] = endhour
+		cls.__settings["intervall"] = intervall
+		cls.__settings["number_of_cases"] = number_of_cases
+		cls.config['CaseSettings'] = cls.__settings
+		cls.saveSettings()
+	
+	@classmethod
+	def saveSettings(cls):
+		with open(cls.__settings_file, 'w') as configfile:
+			cls.config.write(configfile)
 			
 
 class CMDInputError(Exception):
@@ -183,3 +242,7 @@ class CMDInputError(Exception):
 if __name__ == "__main__":
 	cmd = cmdInterface()
 	cmd.main()
+	#CMIFStore.init()
+	#CMDIFStore.changeSettings(12, 23, 22, 11)
+	#print(CMDIFStore.getSettings())
+	

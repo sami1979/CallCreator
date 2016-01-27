@@ -1,3 +1,4 @@
 *.txt
 CallCreator/
 __pycache__/
+cmdIFsettings.ini
