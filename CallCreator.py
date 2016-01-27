@@ -71,7 +71,7 @@ class CaseContainer:
 	
 	@classmethod
 	def emptyCaseQueue(cls):
-		cls.__casequeue == []
+		cls.__casequeue = []
 	
 	@classmethod
 	def sortCaseQueue(cls):
