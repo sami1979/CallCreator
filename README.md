@@ -1,5 +1,10 @@
 # CallCreator
 
+v0.2
+new Commandline Interface added. Run cmdInterface.py to start tool
+
+
+
 v0.1
 
 creating cases for support standby
