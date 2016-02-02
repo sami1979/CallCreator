@@ -45,7 +45,7 @@ class cmdInterface:
 	def printMainMenue(self):
 		self.clearScreen()
 		print("############CallCreator############")
-		print("############v0.1###################")
+		print("############v0.2.2#################")
 		print("###################################")
 		print("\t\t\tBeginn: %i"% (self.beginhour))
 		print("\t\t\tEnde: %i"% (self.endhour))
@@ -144,15 +144,11 @@ class cmdInterface:
 			print("Fehler: Eingabe ungültig!")
 			return
 		self.number_of_cases = number_of_cases
-	
-	def storeSettings(self):
-		self.clearScreen()
+		
 		CMDIFStore.changeSettings(self.beginhour, self.endhour, \
 		                        self.intervall, self.number_of_cases)
-		CMDIFStore.saveSettings()
-		print("Einstellungen gespeichert\n")
-			
-					
+
+								
 	def main(self):
 		call_manager_instance = self.prepareCaseCreator()
 		while True:
@@ -184,9 +180,6 @@ class cmdInterface:
 				input("\n\nDrücke eine Taste um fortzusetzen")
 			elif result == 5:
 				self.deleteCaseDescription(call_manager_instance)
-				input("\n\nDrücke eine Taste um fortzusetzen")
-			elif result == 6:
-				self.storeSettings()
 				input("\n\nDrücke eine Taste um fortzusetzen")
 
 class CMDIFStore:
@@ -225,10 +218,10 @@ class CMDIFStore:
 		cls.__settings["intervall"] = intervall
 		cls.__settings["number_of_cases"] = number_of_cases
 		cls.config['CaseSettings'] = cls.__settings
-		cls.saveSettings()
+		cls.__saveSettingsToFile()
 	
 	@classmethod
-	def saveSettings(cls):
+	def __saveSettingsToFile(cls):
 		with open(cls.__settings_file, 'w') as configfile:
 			cls.config.write(configfile)
 			
@@ -242,7 +235,4 @@ class CMDInputError(Exception):
 if __name__ == "__main__":
 	cmd = cmdInterface()
 	cmd.main()
-	#CMIFStore.init()
-	#CMDIFStore.changeSettings(12, 23, 22, 11)
-	#print(CMDIFStore.getSettings())
 	

@@ -1,5 +1,13 @@
 # CallCreator
 
+v0.2.2
+Änderungen der Case Optionen werden nun automatisch gespeichert.
+Kleine Optimierungen im Code
+
+v0.2.1
+
+Einstellungen können nun gespeichert werden
+
 v0.2
 
 new Commandline Interface added. Run cmdInterface.py to start tool
