@@ -57,7 +57,6 @@ class cmdInterface:
 		print("\t3. Ausgabe der Case Beschreibungen")
 		print("\t4. Eingabe einer neuen Case-Beschreibung")
 		print("\t5. Löschen einer vorhandenen Case-Beschreibung")
-		print("\t6. Einstellungen speichern")
 		print("\n\t0. Ende")
 	
 	def prepareCaseCreator(self):
