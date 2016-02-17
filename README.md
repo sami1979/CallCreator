@@ -1,5 +1,8 @@
 # CallCreator
 
+v0.2.3
+Leere CaseDescriptions.dat wird geschrieben, wenn diese nicht existiert.
+
 v0.2.2
 Änderungen der Case Optionen werden nun automatisch gespeichert.
 Kleine Optimierungen im Code

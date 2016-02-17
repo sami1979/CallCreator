@@ -45,7 +45,7 @@ class cmdInterface:
 	def printMainMenue(self):
 		self.clearScreen()
 		print("############CallCreator############")
-		print("############v0.2.2#################")
+		print("############v0.2.3#################")
 		print("###################################")
 		print("\t\t\tBeginn: %i"% (self.beginhour))
 		print("\t\t\tEnde: %i"% (self.endhour))

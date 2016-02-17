@@ -2,3 +2,5 @@
 CallCreator/
 __pycache__/
 cmdIFsettings.ini
+*.dat
+*.old

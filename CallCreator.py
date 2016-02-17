@@ -123,12 +123,10 @@ class CaseStore:
 	def loadDescriptionContainer(cls):
 		if isfile(cls.__FileDescriptionContainer):
 			f = open(cls.__FileDescriptionContainer, "br")
-			u = pickle.Unpickler(f)
-			CaseDescriptionContainer.load(u.load())
+			CaseDescriptionContainer.load(pickle.Unpickler(f).load())
 			f.close()
-
 		else:
-			raise IOError("File " + cls.__FileDescriptionContainer + " does not exists")
+			cls.storeDescriptionContainer()
 
 class CaseDescriptionContainer:
 
