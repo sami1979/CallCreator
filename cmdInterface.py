@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+__author__ = "Nadim Khoury"
+__version__ = "0.2.3"
+
+
 import platform
 import os
 import configparser
