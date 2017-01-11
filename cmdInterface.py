@@ -207,7 +207,7 @@ class CMDIFStore:
 			                                    "number_of_cases"))
 		else:
 			cls.config["CaseSettings"] = cls.__settings
-			cls.saveSettings()
+			cls.__saveSettingsToFile()
 	
 	@classmethod
 	def getSettings(cls):
